@@ -18,7 +18,7 @@ public class Room {
     public String showUsers(){
         return users.size() == 0 ?
                 "No users" :
-                String.join(", ", users.stream().map(u -> u.toString()).collect(Collectors.toList()));
+                users.stream().map(User::toString).collect(Collectors.joining(", "));
     }
 
     public boolean addUser(User u){
