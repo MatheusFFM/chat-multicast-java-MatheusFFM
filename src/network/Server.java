@@ -6,13 +6,14 @@ import java.net.Socket;
 
 public class Server {
 
+    public static final int PORT = 6875;
+
     public static void main(String[] args) {
-        int port = 6875;
         ServerSocket listenSocket = null;
 
         try {
-            listenSocket = new ServerSocket(port);
-            System.out.println("Servidor ouvindo a porta - TCP: " + port);
+            listenSocket = new ServerSocket(PORT);
+            System.out.println("Server on port - TCP: " + PORT);
 
             while (true){
                 Socket clientSocket = listenSocket.accept();
