@@ -58,7 +58,9 @@ public class Connection extends Thread {
                                     newIp = auxIp.get(auxIp.size() - 1).getNext();
                                     ips.add(newIp);
                                 }
+                                rooms.add(new Room(newIp.toString(), content));
                                 System.out.println(newIp);
+                                System.out.println(rooms);
                                 out.writeUTF(newIp.toString());
                                 break;
                             case Commands.EXIT:
@@ -70,6 +72,17 @@ public class Connection extends Thread {
                                 break;
                             case Commands.USERS:
                                 System.out.println("SHOW USERS OF " + content);
+                                break;
+                            case Commands.LIST_ROOMS:
+                                if(rooms.size() == 0){
+                                    out.writeUTF("No rooms");
+                                } else {
+                                    StringBuilder roomsBuilder = new StringBuilder();
+                                    for (Room r : rooms) {
+                                        roomsBuilder.append("<").append(r).append(" - ").append(r.getAddress()).append("> \n");
+                                    }
+                                    out.writeUTF(roomsBuilder.toString());
+                                }
                                 break;
                         }
                     } else {
