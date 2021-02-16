@@ -1,5 +1,6 @@
 package network;
 
+import models.IpAddress;
 import models.Room;
 
 import java.io.DataInputStream;
@@ -9,12 +10,16 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class Connection extends Thread {
     private DataInputStream in;
     private DataOutputStream out;
     private Socket clientSocket;
     private static List<Room> rooms = new ArrayList<Room>();
+    private static Set<IpAddress> ips = new TreeSet<IpAddress>();
+    public static final int START_MULTICAST = 224;
 
     public Connection(Socket cs) {
             try {
@@ -43,6 +48,18 @@ public class Connection extends Thread {
                         switch (command){
                             case Commands.CREATE_ROOM:
                                 System.out.println("CREATE ROOM " + content);
+                                IpAddress newIp = new IpAddress(224,0,0, 1);
+                                if(ips.size() == 0){
+                                    System.out.println("TA VAZIO");
+                                    ips.add(newIp);
+                                } else{
+                                    System.out.println("TA CHEIO, VAMO VE O PROXIMO");
+                                    List<IpAddress> auxIp = new ArrayList<IpAddress>(ips);
+                                    newIp = auxIp.get(auxIp.size() - 1).getNext();
+                                    ips.add(newIp);
+                                }
+                                System.out.println(newIp);
+                                out.writeUTF(newIp.toString());
                                 break;
                             case Commands.EXIT:
                                 System.out.println("EXIT ROOM");
@@ -55,6 +72,8 @@ public class Connection extends Thread {
                                 System.out.println("SHOW USERS OF " + content);
                                 break;
                         }
+                    } else {
+                        out.writeUTF(data);
                     }
                 }
             } catch (EOFException e) {

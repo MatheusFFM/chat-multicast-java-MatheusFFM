@@ -12,7 +12,7 @@ public class Client {
     private static InetAddress groupIp;
     private static int port = 6876;
 
-    public static void createRoom(String username, String data) throws IOException {
+    public static void joinRoom(String username, String data) throws IOException {
         //data é o endereço Ip
         try {
             groupIp = InetAddress.getByName(data);
@@ -32,7 +32,7 @@ public class Client {
         int serverPort = Server.PORT;
         String host = "localhost";
         Scanner input = new Scanner(System.in);
-        boolean connected = true;
+        boolean connected = false;
 
         try {
             s = new Socket(host, serverPort);
@@ -41,58 +41,63 @@ public class Client {
             System.out.println("Type your username: ");
             String username = input.nextLine();
 
-            System.out.println("Welcome! " + username + "! " +
+            System.out.println("Welcome! " + username + "!\n" +
                     "type " + Commands.JOIN + " and the address to join a room \n" +
                     "type " + Commands.CREATE_ROOM + " and the room name to create a room \n" +
                     "type " + Commands.LIST_ROOMS + " to see all rooms\n" +
                     "type " + Commands.USERS + " and the room address to see all the members\n" +
-                    "type " + Commands.EXIT + " to exit your room");
+                    "type " + Commands.EXIT + " to exit your room\n");
 
-            //String message = input.nextLine();
-            //out.writeUTF(message);
-            System.out.println("Vou escrever");
-            out.writeUTF("/join 228.5.6.7");
-            System.out.println("Escrevi");
-            String data = in.readUTF();
-            System.out.println("DATA = " + data);
+            while (true) {
+                while (!connected){
+                String message = input.nextLine();
+                out.writeUTF(message);
+                String data = in.readUTF();
+                    System.out.println("DATA RETORNADA -> " + data);
 
-            createRoom(username, data);
+                switch (message.split(" ")[0]) {
+                    case Commands.JOIN:
+                        joinRoom(username, data);
+                        connected = true;
+                        break;
+                    default:
+                        System.out.println("nada");
+                }}
 
-            Thread thread = new Thread(() -> {
-                try {
-                    while (true) {
-                        System.out.println("Thread");
-                        byte[] buffer = new byte[1000];
-                        DatagramPacket messageIn = new DatagramPacket(buffer, buffer.length, groupIp, port);
-                        mSocket.receive(messageIn);
-                        String msg = new String(messageIn.getData()).trim();
-                        System.out.println( new String(messageIn.getData()).trim());
+                Thread thread = new Thread(() -> {
+                    try {
+                        while (true) {
+                            byte[] buffer = new byte[1000];
+                            DatagramPacket messageIn = new DatagramPacket(buffer, buffer.length, groupIp, port);
+                            mSocket.receive(messageIn);
+                            String msg = new String(messageIn.getData()).trim();
+                            System.out.println(new String(messageIn.getData()).trim());
+                        }
+                    } catch (IOException e) {
+                        System.out.println("IO: " + e.getMessage());
                     }
-                } catch (IOException e) {
-                    System.out.println("IO: " + e.getMessage());
-                }
-            });
-            thread.start();
+                });
+                thread.start();
 
-            String noAuthorMessage;
-            String messageWithAuthor;
+                String noAuthorMessage;
+                String messageWithAuthor;
 
-            while(connected) {
-                noAuthorMessage = input.nextLine();
-                if (noAuthorMessage.startsWith(Commands.EXIT)) {
-                    mSocket.leaveGroup(groupIp);
-                    out.writeUTF(Commands.EXIT);
-                    connected = false;
-                    System.out.println("## CHAT ENCERRADO COM SUCESSO ##");
-                    System.exit(200);
-                } else {
-                    messageWithAuthor = "<" + username + "> :  " + noAuthorMessage;
-                    byte[] message = messageWithAuthor.getBytes();
-                    DatagramPacket messageOut = new DatagramPacket(message, message.length, groupIp, port);
-                    mSocket.send(messageOut);
+                while (connected) {
+                    noAuthorMessage = input.nextLine();
+                    if (noAuthorMessage.startsWith(Commands.EXIT)) {
+                        mSocket.leaveGroup(groupIp);
+                        out.writeUTF(Commands.EXIT);
+                        connected = false;
+                        System.out.println("## CHAT ENCERRADO COM SUCESSO ##");
+                        System.exit(200);
+                    } else {
+                        messageWithAuthor = "<" + username + "> :  " + noAuthorMessage;
+                        byte[] msg = messageWithAuthor.getBytes();
+                        DatagramPacket messageOut = new DatagramPacket(msg, msg.length, groupIp, port);
+                        mSocket.send(messageOut);
+                    }
                 }
             }
-                //createRoom(username, data);
 
         } catch (UnknownHostException e) {
             e.printStackTrace();
