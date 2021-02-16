@@ -1,6 +1,6 @@
 package network;
 
-import models.User;
+import models.Room;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -9,14 +9,12 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class Connection extends Thread {
     private DataInputStream in;
     private DataOutputStream out;
     private Socket clientSocket;
-    private static List<User> users = new ArrayList<User>();
+    private static List<Room> rooms = new ArrayList<Room>();
 
     public Connection(Socket cs) {
             try {
@@ -32,22 +30,32 @@ public class Connection extends Thread {
         public void run() {
             try {
                 while(true){
-                    System.out.println("Entrei");
                     String data = in.readUTF();
-                    String command;
-                    String content;
-                    if(data.startsWith("/")){
+                    String command, content;
+                    if(data.startsWith("/")) {
                         String[] splitedDate = data.split(" ");
                         command = splitedDate[0];
                         StringBuilder sb = new StringBuilder();
-                        for(int i = 1; i < splitedDate.length; i++){
-                            sb.append(splitedDate[i] + " ");
+                        for (int i = 1; i < splitedDate.length; i++) {
+                            sb.append(splitedDate[i]);
                         }
                         content = sb.toString();
-                        System.out.println("Comando = " + command + "\nContent = " + content);
+                        switch (command){
+                            case Commands.CREATE_ROOM:
+                                System.out.println("CREATE ROOM " + content);
+                                break;
+                            case Commands.EXIT:
+                                System.out.println("EXIT ROOM");
+                                break;
+                            case Commands.JOIN:
+                                System.out.println("JOIN THE ROOM " + content);
+                                out.writeUTF(content);
+                                break;
+                            case Commands.USERS:
+                                System.out.println("SHOW USERS OF " + content);
+                                break;
+                        }
                     }
-                    System.out.println("Received: " + data);
-                    out.writeUTF(data);
                 }
             } catch (EOFException e) {
                 System.out.println("EOF:" + e.getMessage());
