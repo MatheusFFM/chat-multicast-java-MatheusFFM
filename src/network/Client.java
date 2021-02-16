@@ -12,13 +12,22 @@ public class Client {
     private static InetAddress groupIp;
     private static int port = 6876;
 
-    public static void joinRoom(String username, String data) throws IOException {
-        //data é o endereço Ip
+    private static void showOptions(){
+        System.out.println("type " + Commands.JOIN + " and the address to join a room \n" +
+                "type " + Commands.CREATE_ROOM + " and the room name to create a room \n" +
+                "type " + Commands.LIST_ROOMS + " to see all rooms\n" +
+                "type " + Commands.USERS + " and the room address to see all the members\n" +
+                "type " + Commands.EXIT + " to exit your room\n" +
+                "type " + Commands.HELP + " for see this again\n");
+    }
+
+    private static void joinRoom(String username, String data) throws IOException {
+        //data is address
         try {
             groupIp = InetAddress.getByName(data);
             mSocket = new MulticastSocket(port);
             mSocket.joinGroup(groupIp);
-            String joinMessage = username + " JOINED THE ROOM";
+            String joinMessage = "< " + username + " JOINED THE ROOM>";
             byte[] message = joinMessage.getBytes();
             DatagramPacket messageOut = new DatagramPacket(message, message.length, groupIp, port);
             mSocket.send(messageOut);
@@ -41,27 +50,30 @@ public class Client {
             System.out.println("Type your username: ");
             String username = input.nextLine();
 
-            System.out.println("Welcome! " + username + "!\n" +
-                    "type " + Commands.JOIN + " and the address to join a room \n" +
-                    "type " + Commands.CREATE_ROOM + " and the room name to create a room \n" +
-                    "type " + Commands.LIST_ROOMS + " to see all rooms\n" +
-                    "type " + Commands.USERS + " and the room address to see all the members\n" +
-                    "type " + Commands.EXIT + " to exit your room\n");
+            System.out.println("\nWelcome! " + username + "!\n");
+            showOptions();
 
             while (true) {
                 while (!connected){
                 String message = input.nextLine();
                 out.writeUTF(message);
                 String data = in.readUTF();
-                    System.out.println("DATA RETORNADA -> " + data);
 
                 switch (message.split(" ")[0]) {
                     case Commands.JOIN:
                         joinRoom(username, data);
                         connected = true;
                         break;
+                    case Commands.CREATE_ROOM:
+                        System.out.println("SUCCESS! Your room address is: " + data);
+                        break;
+                    case Commands.HELP:
+                        System.out.println("ELE QUER HELP");
+                        showOptions();
+                        break;
                     default:
-                        System.out.println("nada");
+                        System.out.println("Please, type a valid command. " +
+                                "\n Type /help if you need help");
                 }}
 
                 Thread thread = new Thread(() -> {
@@ -88,7 +100,7 @@ public class Client {
                         mSocket.leaveGroup(groupIp);
                         out.writeUTF(Commands.EXIT);
                         connected = false;
-                        System.out.println("## CHAT ENCERRADO COM SUCESSO ##");
+                        System.out.println("YOU LEFT THE ROOM");
                         System.exit(200);
                     } else {
                         messageWithAuthor = "<" + username + "> :  " + noAuthorMessage;

@@ -6,4 +6,5 @@ public class Commands {
     public static final String LIST_ROOMS = "/listRooms";
     public static final String JOIN = "/join";
     public static final String USERS = "/users";
+    public static final String HELP = "/help";
 }

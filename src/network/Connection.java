@@ -20,6 +20,7 @@ public class Connection extends Thread {
     private static List<Room> rooms = new ArrayList<Room>();
     private static Set<IpAddress> ips = new TreeSet<IpAddress>();
     public static final int START_MULTICAST = 224;
+    public static final String NO_USERS_MESSAGE = "No users";
 
     public Connection(Socket cs) {
             try {
@@ -50,17 +51,13 @@ public class Connection extends Thread {
                                 System.out.println("CREATE ROOM " + content);
                                 IpAddress newIp = new IpAddress(224,0,0, 1);
                                 if(ips.size() == 0){
-                                    System.out.println("TA VAZIO");
                                     ips.add(newIp);
                                 } else{
-                                    System.out.println("TA CHEIO, VAMO VE O PROXIMO");
                                     List<IpAddress> auxIp = new ArrayList<IpAddress>(ips);
                                     newIp = auxIp.get(auxIp.size() - 1).getNext();
                                     ips.add(newIp);
                                 }
                                 rooms.add(new Room(newIp.toString(), content));
-                                System.out.println(newIp);
-                                System.out.println(rooms);
                                 out.writeUTF(newIp.toString());
                                 break;
                             case Commands.EXIT:
@@ -75,15 +72,17 @@ public class Connection extends Thread {
                                 break;
                             case Commands.LIST_ROOMS:
                                 if(rooms.size() == 0){
-                                    out.writeUTF("No rooms");
+                                    out.writeUTF(NO_USERS_MESSAGE);
                                 } else {
                                     StringBuilder roomsBuilder = new StringBuilder();
                                     for (Room r : rooms) {
-                                        roomsBuilder.append("<").append(r).append(" - ").append(r.getAddress()).append("> \n");
+                                        roomsBuilder.append("\n<").append(r).append(" - ").append(r.getAddress()).append(">");
                                     }
                                     out.writeUTF(roomsBuilder.toString());
                                 }
                                 break;
+                            default:
+                                out.writeUTF(data);
                         }
                     } else {
                         out.writeUTF(data);
