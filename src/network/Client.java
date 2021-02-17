@@ -17,7 +17,7 @@ public class Client {
                 "type " + Commands.CREATE_ROOM + " and the room name to create a room \n" +
                 "type " + Commands.LIST_ROOMS + " to see all rooms\n" +
                 "type " + Commands.USERS + " and the room address to see all the members\n" +
-                "type " + Commands.EXIT + " to exit your room\n" +
+                "type " + Commands.EXIT + " to exit your room or the program\n" +
                 "type " + Commands.HELP + " for see this again\n");
     }
 
@@ -51,9 +51,10 @@ public class Client {
             String username = input.nextLine();
 
             System.out.println("\nWelcome! " + username + "!\n");
-            showOptions();
 
             while (true) {
+                showOptions();
+
                 while (!connected){
                 String message = input.nextLine();
 
@@ -83,6 +84,10 @@ public class Client {
                         break;
                     case Commands.HELP:
                         showOptions();
+                        break;
+                    case Commands.EXIT:
+                        System.exit(200);
+                        System.out.println("Exiting ");
                         break;
                     default:
                         System.out.println("\nPlease, type a valid command. " +
@@ -114,7 +119,6 @@ public class Client {
                         out.writeUTF(Commands.EXIT);
                         connected = false;
                         System.out.println("YOU LEFT THE ROOM");
-                        System.exit(200);
                     } else {
                         messageWithAuthor = "<" + username + "> :  " + noAuthorMessage;
                         byte[] msg = messageWithAuthor.getBytes();
@@ -122,6 +126,7 @@ public class Client {
                         mSocket.send(messageOut);
                     }
                 }
+
             }
 
         } catch (UnknownHostException e) {
