@@ -50,7 +50,6 @@ public class Connection extends Thread {
                         content = sb.toString();
                         switch (command){
                             case Commands.CREATE_ROOM:
-                                //System.out.println("CREATE ROOM " + content);
                                 IpAddress newIp = new IpAddress(START_MULTICAST,0,0, 1);
                                 if(ips.size() != 0){
                                     List<IpAddress> auxIp = new ArrayList<IpAddress>(ips);
@@ -61,7 +60,6 @@ public class Connection extends Thread {
                                 out.writeUTF(newIp.toString());
                                 break;
                             case Commands.JOIN:
-                                //System.out.println("JOIN THE ROOM " + content)
                                 String ipFromContent = content.split(Commands.USER)[0];
                                 String userFromContent = content.split(Commands.USER)[1];
 
@@ -77,18 +75,15 @@ public class Connection extends Thread {
                                 }
                                 out.writeUTF(Commands.ERROR);
                                 break;
-                            case Commands.USERS:
-                                //System.out.println("SHOW USERS OF " + content);
+                            case Commands.USERS_LIST:
                                 IpAddress ipToShow = IpAddress.ipFromString(content);
                                 Room roomToShow = new Room(ipToShow, GENERIC_ROOM_NAME);
                                 for(Room r: rooms){
                                     if(r.compareTo(roomToShow) == 0){
-                                        System.out.println("ACHOUUUU");
-                                        System.out.println(r.showUsers());
                                         out.writeUTF(r.showUsers());
                                     }
                                 }
-                                out.writeUTF(Commands.ERROR);
+                                out.writeUTF(roomToShow.showUsers());
                                 break;
                             case Commands.LIST_ROOMS:
                                 if(rooms.size() == 0){
@@ -117,7 +112,7 @@ public class Connection extends Thread {
                     clientSocket.close();
                     System.out.println("Server: Closing connection");
                 } catch (IOException e) {
-                    /* close falhou */
+                    /* close failed */
                 }
             }
         }
