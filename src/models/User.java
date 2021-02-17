@@ -2,7 +2,7 @@ package models;
 
 public class User {
     private String name;
-    private String room;
+    private IpAddress room;
 
     public User(String name){
         this.name = name;
@@ -17,11 +17,11 @@ public class User {
         this.name = name;
     }
 
-    public String getRoom() {
+    public IpAddress getRoom() {
         return room;
     }
 
-    public void setRoom(String room) {
+    public void setRoom(IpAddress room) {
         this.room = room;
     }
 

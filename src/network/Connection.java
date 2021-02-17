@@ -2,6 +2,7 @@ package network;
 
 import models.IpAddress;
 import models.Room;
+import models.User;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -20,7 +21,8 @@ public class Connection extends Thread {
     private static List<Room> rooms = new ArrayList<Room>();
     private static Set<IpAddress> ips = new TreeSet<IpAddress>();
     public static final int START_MULTICAST = 224;
-    public static final String NO_USERS_MESSAGE = "No users";
+    public static final String NO_ROOMS_MESSAGE = "No rooms. Type /room and the room name to create a room";
+    public static final String GENERIC_ROOM_NAME = "Generic";
 
     public Connection(Socket cs) {
             try {
@@ -48,31 +50,37 @@ public class Connection extends Thread {
                         content = sb.toString();
                         switch (command){
                             case Commands.CREATE_ROOM:
-                                System.out.println("CREATE ROOM " + content);
-                                IpAddress newIp = new IpAddress(224,0,0, 1);
-                                if(ips.size() == 0){
-                                    ips.add(newIp);
-                                } else{
+                                //System.out.println("CREATE ROOM " + content);
+                                IpAddress newIp = new IpAddress(START_MULTICAST,0,0, 1);
+                                if(ips.size() != 0){
                                     List<IpAddress> auxIp = new ArrayList<IpAddress>(ips);
                                     newIp = auxIp.get(auxIp.size() - 1).getNext();
-                                    ips.add(newIp);
                                 }
-                                rooms.add(new Room(newIp.toString(), content));
+                                ips.add(newIp);
+                                rooms.add(new Room(newIp, content));
                                 out.writeUTF(newIp.toString());
                                 break;
                             case Commands.EXIT:
-                                System.out.println("EXIT ROOM");
+                                //System.out.println("EXIT ROOM");
                                 break;
                             case Commands.JOIN:
-                                System.out.println("JOIN THE ROOM " + content);
-                                out.writeUTF(content);
+                                //System.out.println("JOIN THE ROOM " + content)
+                                IpAddress ipToEnter = IpAddress.ipFromString(content);
+                                Room roomToEnter = new Room(ipToEnter, GENERIC_ROOM_NAME);
+                                for(Room r: rooms){
+                                    if(r.compareTo(roomToEnter) == 0){
+                                        out.writeUTF(ipToEnter.toString());
+                                    }
+                                }
+                                out.writeUTF(Commands.ERROR);
                                 break;
                             case Commands.USERS:
-                                System.out.println("SHOW USERS OF " + content);
+                                //System.out.println("SHOW USERS OF " + content);
+
                                 break;
                             case Commands.LIST_ROOMS:
                                 if(rooms.size() == 0){
-                                    out.writeUTF(NO_USERS_MESSAGE);
+                                    out.writeUTF(NO_ROOMS_MESSAGE);
                                 } else {
                                     StringBuilder roomsBuilder = new StringBuilder();
                                     for (Room r : rooms) {

@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Room {
-    private String address;
+public class Room implements Comparable<Room> {
+    private IpAddress address;
     private String name;
     private List<User> users;
 
-    public Room(String address, String name) {
+    public Room(IpAddress address, String name) {
         this.address = address;
         this.name = name;
         this.users = new ArrayList<User>();
@@ -31,11 +31,11 @@ public class Room {
         return this.users.remove(u);
     }
 
-    public String getAddress() {
+    public IpAddress getAddress() {
         return address;
     }
 
-    public void setAddress(String address) {
+    public void setAddress(IpAddress address) {
         this.address = address;
     }
 
@@ -50,5 +50,10 @@ public class Room {
     @Override
     public String toString(){
         return "Room " + this.name;
+    }
+
+    @Override
+    public int compareTo(Room o) {
+        return this.address.compareTo(o.address);
     }
 }

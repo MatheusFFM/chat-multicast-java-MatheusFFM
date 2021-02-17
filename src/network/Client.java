@@ -56,23 +56,36 @@ public class Client {
             while (true) {
                 while (!connected){
                 String message = input.nextLine();
+
+//                if(message.startsWith(Commands.JOIN)){
+//                    message = message + Commands.USER + username;
+//                }
+                System.out.println("Vou enviar a mensagem -> " + message);
+
                 out.writeUTF(message);
                 String data = in.readUTF();
 
                 switch (message.split(" ")[0]) {
                     case Commands.JOIN:
-                        joinRoom(username, data);
-                        connected = true;
+                        if(data.equals(Commands.ERROR)){
+                            System.out.println("\nERROR! This room does not exist\n" +
+                                    "Try other address or create your own room");
+                        } else {
+                            joinRoom(username, data);
+                            connected = true;
+                        }
                         break;
                     case Commands.CREATE_ROOM:
-                        System.out.println("SUCCESS! Your room address is: " + data);
+                        System.out.println("\nSUCCESS! Your room address is: " + data);
+                        break;
+                    case Commands.LIST_ROOMS:
+                        System.out.println("All rooms created: \n" + data);
                         break;
                     case Commands.HELP:
-                        System.out.println("ELE QUER HELP");
                         showOptions();
                         break;
                     default:
-                        System.out.println("Please, type a valid command. " +
+                        System.out.println("\nPlease, type a valid command. " +
                                 "\n Type /help if you need help");
                 }}
 

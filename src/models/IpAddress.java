@@ -5,12 +5,28 @@ public class IpAddress implements Comparable<IpAddress> {
     private int maskSecond;
     private int maskMiddle;
     private int maskEnd;
+    public static final int MASK_LIMIT = 255;
 
     public IpAddress(int maskInit, int maskSecond, int maskMiddle, int maskEnd) {
+        maskInit = Math.min(maskInit, MASK_LIMIT);
+        maskSecond = Math.min(maskSecond, MASK_LIMIT);
+        maskMiddle = Math.min(maskMiddle, MASK_LIMIT);
+        maskEnd = Math.min(maskEnd, MASK_LIMIT);
+
         this.maskSecond = maskSecond;
         this.maskInit = maskInit;
         this.maskMiddle = maskMiddle;
         this.maskEnd = maskEnd;
+    }
+
+    public static IpAddress ipFromString(String address){
+        String[] ipSplit = address.split("[.]");
+        int maskInit = Math.min(Integer.parseInt(ipSplit[0]), MASK_LIMIT);
+        int maskSecond = Math.min(Integer.parseInt(ipSplit[1]), MASK_LIMIT);
+        int maskMiddle = Math.min(Integer.parseInt(ipSplit[2]), MASK_LIMIT);
+        int maskEnd = Math.min(Integer.parseInt(ipSplit[3]), MASK_LIMIT);
+
+        return new IpAddress(maskInit, maskSecond, maskMiddle, maskEnd);
     }
 
     public int getMaskInit() {
