@@ -76,11 +76,14 @@ public class Connection extends Thread {
                                 out.writeUTF(Commands.ERROR);
                                 break;
                             case Commands.USERS_LIST:
+                                boolean find = false;
                                 IpAddress ipToShow = IpAddress.ipFromString(content);
                                 Room roomToShow = new Room(ipToShow, GENERIC_ROOM_NAME);
                                 for(Room r: rooms){
                                     if(r.compareTo(roomToShow) == 0){
-                                        out.writeUTF(r.showUsers());
+                                        find = true;
+                                        roomToShow = r;
+                                        break;
                                     }
                                 }
                                 out.writeUTF(roomToShow.showUsers());

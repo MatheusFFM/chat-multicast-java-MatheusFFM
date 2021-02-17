@@ -66,6 +66,8 @@ public class Client {
 
                 out.writeUTF(message);
                 String data = in.readUTF();
+                    System.out.println("MENSAGEM INDO -> " + message);
+                    System.out.println("DATA CHEGANDO -> " + data);
 
                 switch (message.split(" ")[0]) {
                     case Commands.JOIN:
