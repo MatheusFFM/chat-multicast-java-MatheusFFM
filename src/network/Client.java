@@ -37,7 +37,7 @@ public class Client {
     }
 
     public static void main(String[] args) {
-        Socket s = null;
+        Socket s;
         int serverPort = Server.PORT;
         String host = "localhost";
         Scanner input = new Scanner(System.in);
@@ -61,7 +61,6 @@ public class Client {
                 if(message.startsWith(Commands.JOIN)){
                     message = message + Commands.USER + username;
                 }
-                System.out.println("Vou enviar a mensagem -> " + message);
 
                 out.writeUTF(message);
                 String data = in.readUTF();
@@ -74,6 +73,14 @@ public class Client {
                         } else {
                             joinRoom(username, data);
                             connected = true;
+                        }
+                        break;
+                    case Commands.USERS:
+                        if(data.equals(Commands.ERROR)){
+                            System.out.println("\nERROR! This room does not exist\n" +
+                                    "Try other address");
+                        } else {
+                            System.out.println(data);
                         }
                         break;
                     case Commands.CREATE_ROOM:
@@ -129,8 +136,6 @@ public class Client {
 
             }
 
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }

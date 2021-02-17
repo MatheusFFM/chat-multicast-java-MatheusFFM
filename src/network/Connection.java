@@ -71,15 +71,24 @@ public class Connection extends Thread {
                                 Room roomToEnter = new Room(ipToEnter, GENERIC_ROOM_NAME);
                                 for(Room r: rooms){
                                     if(r.compareTo(roomToEnter) == 0){
-                                        out.writeUTF(ipToEnter.toString());
                                         r.addUser(user);
+                                        out.writeUTF(ipToEnter.toString());
                                     }
                                 }
                                 out.writeUTF(Commands.ERROR);
                                 break;
                             case Commands.USERS:
                                 //System.out.println("SHOW USERS OF " + content);
-
+                                IpAddress ipToShow = IpAddress.ipFromString(content);
+                                Room roomToShow = new Room(ipToShow, GENERIC_ROOM_NAME);
+                                for(Room r: rooms){
+                                    if(r.compareTo(roomToShow) == 0){
+                                        System.out.println("ACHOUUUU");
+                                        System.out.println(r.showUsers());
+                                        out.writeUTF(r.showUsers());
+                                    }
+                                }
+                                out.writeUTF(Commands.ERROR);
                                 break;
                             case Commands.LIST_ROOMS:
                                 if(rooms.size() == 0){
