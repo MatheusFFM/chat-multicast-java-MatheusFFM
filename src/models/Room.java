@@ -1,0 +1,59 @@
+package models;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class Room implements Comparable<Room> {
+    private IpAddress address;
+    private String name;
+    private List<User> users;
+
+    public Room(IpAddress address, String name) {
+        this.address = address;
+        this.name = name;
+        this.users = new ArrayList<User>();
+    }
+
+    public String showUsers(){
+        return users.size() == 0 ?
+                "No users" :
+                users.stream().map(User::toString).collect(Collectors.joining(", "));
+    }
+
+    public boolean addUser(User u){
+        u.setRoom(this.address);
+        return this.users.add(u);
+    }
+
+    public boolean removeUser(User u){
+        u.setRoom(null);
+        return this.users.remove(u);
+    }
+
+    public IpAddress getAddress() {
+        return address;
+    }
+
+    public void setAddress(IpAddress address) {
+        this.address = address;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String toString(){
+        return "Room " + this.name;
+    }
+
+    @Override
+    public int compareTo(Room o) {
+        return this.address.compareTo(o.address);
+    }
+}
