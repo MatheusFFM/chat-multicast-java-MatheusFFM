@@ -60,16 +60,19 @@ public class Connection extends Thread {
                                 rooms.add(new Room(newIp, content));
                                 out.writeUTF(newIp.toString());
                                 break;
-                            case Commands.EXIT:
-                                //System.out.println("EXIT ROOM");
-                                break;
                             case Commands.JOIN:
                                 //System.out.println("JOIN THE ROOM " + content)
-                                IpAddress ipToEnter = IpAddress.ipFromString(content);
+                                String ipFromContent = content.split(Commands.USER)[0];
+                                String userFromContent = content.split(Commands.USER)[1];
+
+                                User user = new User(userFromContent);
+
+                                IpAddress ipToEnter = IpAddress.ipFromString(ipFromContent);
                                 Room roomToEnter = new Room(ipToEnter, GENERIC_ROOM_NAME);
                                 for(Room r: rooms){
                                     if(r.compareTo(roomToEnter) == 0){
                                         out.writeUTF(ipToEnter.toString());
+                                        r.addUser(user);
                                     }
                                 }
                                 out.writeUTF(Commands.ERROR);

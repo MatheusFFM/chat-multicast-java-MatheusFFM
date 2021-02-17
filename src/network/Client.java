@@ -57,9 +57,9 @@ public class Client {
                 while (!connected){
                 String message = input.nextLine();
 
-//                if(message.startsWith(Commands.JOIN)){
-//                    message = message + Commands.USER + username;
-//                }
+                if(message.startsWith(Commands.JOIN)){
+                    message = message + Commands.USER + username;
+                }
                 System.out.println("Vou enviar a mensagem -> " + message);
 
                 out.writeUTF(message);
