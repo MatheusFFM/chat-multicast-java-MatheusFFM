@@ -22,14 +22,34 @@
 - **ROOM:** Modelo da sala, com seu nome, endereço e usuários.
 - **IpAddress:** Modelo de endereço para gerar endereços multicast com mais facilidade.
 
-## Execução - Server
+## Execução
 
-- java network.Server
+```bash
+# Clonar o repositório
+git clone https://github.com/PUC-DISCIPLINAS/chat-multicast-java-MatheusFFM.git
+```
 
-Única interação com o usuário é exibir a mensagem de servidor iniciado.
+### Execução - Servidor
 
-## Execução - Cliente
+```bash
+# Caminho para os arquivos .class
+cd chat-multicast-java-MatheusFFM/out/production/chat-multicast-java
 
-- java network.Client
+# Executar o servidor
+java network.Server
+```
 
-Possui diversas interações com o usuário. Inicia pedindo um username e então mostra o menu de opções.
+Retorna que o servidor está aberto se a execução ocorrer com sucesso.
+
+### Execução - Cliente
+
+```bash
+# Caminho para os arquivos .class
+cd chat-multicast-java-MatheusFFM/out/production/chat-multicast-java
+
+# Executar o cliente
+java network.Client
+```
+
+Possui diversas interações com o usuário. Inicia pedindo um username e então mostra o menu de opções. Execute outros clients para poder conferir a interação entre eles.
+
