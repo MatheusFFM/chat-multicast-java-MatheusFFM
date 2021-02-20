@@ -70,6 +70,8 @@ public class Client {
 
                     if (message.startsWith(Commands.JOIN)) {
                         message = message + Commands.USER + username;
+                    } else if(message.startsWith(Commands.EXIT)) {
+                        System.exit(200);
                     }
 
                     out.writeUTF(message);
@@ -87,9 +89,6 @@ public class Client {
                             break;
                         case Commands.CREATE_ROOM:
                             System.out.println("\n## SUCCESS! Your room address is: " + data + "\n");
-                            break;
-                        case Commands.EXIT:
-                            System.exit(200);
                             break;
                         case Commands.LIST_ROOMS:
                             System.out.println("## All rooms created: \n" + data + "\n");
