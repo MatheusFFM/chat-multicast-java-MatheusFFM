@@ -15,18 +15,18 @@ public class Room implements Comparable<Room> {
         this.users = new ArrayList<User>();
     }
 
-    public String showUsers(){
+    public String showUsers() {
         return users.size() == 0 ?
                 "No users" :
                 users.stream().map(User::toString).collect(Collectors.joining(", "));
     }
 
-    public void addUser(User u){
+    public void addUser(User u) {
         this.users.add(u);
     }
 
-    public boolean removeUser(User u){
-        if(this.users.remove(u)) {
+    public boolean removeUser(User u) {
+        if (this.users.remove(u)) {
             u.setRoom(null);
             return true;
         }
@@ -54,7 +54,7 @@ public class Room implements Comparable<Room> {
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return "Room " + this.name;
     }
 

@@ -15,7 +15,7 @@ public class Server {
             listenSocket = new ServerSocket(PORT);
             System.out.println("Server on port - TCP: " + PORT);
 
-            while (true){
+            while (true) {
                 Socket clientSocket = listenSocket.accept();
                 new Connection(clientSocket);
             }
