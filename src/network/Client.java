@@ -39,25 +39,32 @@ public class Client {
     }
 
     public static void main(String[] args) {
-        Socket s;
         int serverPort = Server.PORT;
         String host = "localhost";
         Scanner input = new Scanner(System.in);
+        boolean socketOnServer = false;
+        String data = null;
+
         boolean connected = false;
 
-        try {
-            s = new Socket(host, serverPort);
-            DataInputStream in = new DataInputStream(s.getInputStream());
-            DataOutputStream out = new DataOutputStream(s.getOutputStream());
             System.out.print("> Type your username: ");
             String username = input.nextLine();
-
             System.out.println("\n<| Welcome, " + username + "! |>\n");
 
+        try {
+            Socket s = new Socket(host, serverPort);;
+            DataInputStream in = new DataInputStream(s.getInputStream());
+            DataOutputStream out = new DataOutputStream(s.getOutputStream());
+
             while (true) {
+
                 showOptions();
+                if(data != null){
+                    data = in.readUTF();
+                }
 
                 while (!connected){
+
                 String message = input.nextLine();
 
                 if(message.startsWith(Commands.JOIN)){
@@ -65,9 +72,7 @@ public class Client {
                 }
 
                 out.writeUTF(message);
-                String data = in.readUTF();
-                    System.out.println("MENSAGEM INDO -> " + message);
-                    System.out.println("DATA CHEGANDO -> " + data);
+                data = in.readUTF();
 
                 switch (message.split(" ")[0]) {
                     case Commands.JOIN:
@@ -98,7 +103,6 @@ public class Client {
                         break;
                     case Commands.EXIT:
                         System.exit(200);
-                        System.out.println("Exiting ");
                         break;
                     default:
                         System.out.println("\n## Please, type a valid command. " +
@@ -131,7 +135,8 @@ public class Client {
                         DatagramPacket messageOut = new DatagramPacket(message, message.length, groupIp, port);
                         mSocket.send(messageOut);
                         mSocket.leaveGroup(groupIp);
-                        out.writeUTF(Commands.EXIT);
+                        out.writeUTF(Commands.EXIT + " " + Commands.USER + username);
+                        in.readUTF();
                         connected = false;
                     } else {
                         messageWithAuthor = "<" + username + ">:  " + noAuthorMessage;
@@ -140,11 +145,10 @@ public class Client {
                         mSocket.send(messageOut);
                     }
                 }
-
-            }
+                }
 
         } catch (IOException e) {
-            e.printStackTrace();
+               e.printStackTrace();
         }
     }
 }

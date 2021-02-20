@@ -5,7 +5,7 @@ public class IpAddress implements Comparable<IpAddress> {
     private int maskSecond;
     private int maskMiddle;
     private int maskEnd;
-    public static final int MASK_LIMIT = 255;
+    private static final int MASK_LIMIT = 255;
 
     public IpAddress(int maskInit, int maskSecond, int maskMiddle, int maskEnd) {
         maskInit = Math.min(maskInit, MASK_LIMIT);

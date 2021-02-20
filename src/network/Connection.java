@@ -40,6 +40,7 @@ public class Connection extends Thread {
                 while(true){
                     String data = in.readUTF();
                     String command, content;
+
                     if(data.startsWith("/")) {
                         String[] splitedDate = data.split(" ");
                         command = splitedDate[0];
@@ -76,12 +77,10 @@ public class Connection extends Thread {
                                 out.writeUTF(Commands.ERROR);
                                 break;
                             case Commands.USERS_LIST:
-                                boolean find = false;
                                 IpAddress ipToShow = IpAddress.ipFromString(content);
                                 Room roomToShow = new Room(ipToShow, GENERIC_ROOM_NAME);
                                 for(Room r: rooms){
                                     if(r.compareTo(roomToShow) == 0){
-                                        find = true;
                                         roomToShow = r;
                                         break;
                                     }
@@ -99,8 +98,30 @@ public class Connection extends Thread {
                                     out.writeUTF(roomsBuilder.toString());
                                 }
                                 break;
+                            case Commands.EXIT:
+                               String userToRemove = content.split(Commands.USER)[1];
+                               Room roomRef = null;
+                               User userRef = null;
+                               boolean find = false;
+                                
+                               for(Room r : rooms) {
+                                   for (User u : r.getUsers()) {
+                                       if (u.getName().equals(userToRemove)) {
+                                           roomRef = r;
+                                           userRef = u;
+                                           find = true;
+                                       }
+                                   }
+                                   if(find){
+                                       break;
+                                   }
+                               }
+                                assert roomRef != null;
+                                roomRef.removeUser(userRef);
+                               out.writeUTF("");
+                               break;
                             default:
-                                out.writeUTF(data);
+                                out.writeUTF(command);
                         }
                     } else {
                         out.writeUTF(data);
