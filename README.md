@@ -20,7 +20,7 @@
 - **COMMANDS:** Possui os comandos do sistema.
 - **USER:** Modelo do usuário, possuindo seu nome.
 - **ROOM:** Modelo da sala, com seu nome, endereço e usuários.
-- **IpAddress:* Modelo de endereço para gerar endereços multicast com mais facilidade.
+- **IpAddress:** Modelo de endereço para gerar endereços multicast com mais facilidade.
 
 ## Execução - Server
 
