@@ -1,9 +1,9 @@
 # Chat Multicast Java
 
-##AUTOR
+## AUTOR
 *Matheus Felipe Ferreira Martins
 
-##Comandos
+## Comandos
 
 - **CRIAR SALAS**:  /room ${room_name} | Esse comando cria uma nova sala com o nome igual ao valor em room_name, então retorna o endereço da sala.
 - **LISTAR SALAS**: /list | Esse comando mostra todas as salas criadas.
@@ -12,7 +12,7 @@
 - **LISTAR MEMBROS DA SALA**: /members ${room_address} | Esse comando mostra todos os membros presentes na sala com o **endereço** igual ao valor em room_address.
 - **ENVIAR MENSAGEM**: Uma vez dentro de uma sala, qualquer mensagem exceto o comando /exit mandam mensagem para a sala;
 
-##Classes
+## Classes
 
 - **SERVER:** Cria um server TCP que instancia a classe Connection. Possui a classe main do lado do servidor.
 - **CONECTION:** Realiza o controle dos dados, recebe comandos de usuário a partir da classe Client, manipula ou cria salas e usuários e retorna um valor de resposta para a classe Client, podendo também ser um erro.
@@ -22,7 +22,7 @@
 - **ROOM:** Modelo da sala, com seu nome, endereço e usuários.
 - **IpAddress:* Modelo de endereço para gerar endereços multicast com mais facilidade.
 
-##Execução - Server
+## Execução - Server
 
 - java network.Server
 
