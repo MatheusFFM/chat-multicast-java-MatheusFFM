@@ -4,7 +4,7 @@ public class User {
     private String name;
     private IpAddress room;
 
-    public User(String name){
+    public User(String name) {
         this.name = name;
         this.room = null;
     }
@@ -26,7 +26,7 @@ public class User {
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return this.name;
     }
 }

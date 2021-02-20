@@ -5,7 +5,7 @@ public class IpAddress implements Comparable<IpAddress> {
     private int maskSecond;
     private int maskMiddle;
     private int maskEnd;
-    public static final int MASK_LIMIT = 255;
+    private static final int MASK_LIMIT = 255;
 
     public IpAddress(int maskInit, int maskSecond, int maskMiddle, int maskEnd) {
         maskInit = Math.min(maskInit, MASK_LIMIT);
@@ -19,7 +19,7 @@ public class IpAddress implements Comparable<IpAddress> {
         this.maskEnd = maskEnd;
     }
 
-    public static IpAddress ipFromString(String address){
+    public static IpAddress ipFromString(String address) {
         String[] ipSplit = address.split("[.]");
         int maskInit = Math.min(Integer.parseInt(ipSplit[0]), MASK_LIMIT);
         int maskSecond = Math.min(Integer.parseInt(ipSplit[1]), MASK_LIMIT);
@@ -61,21 +61,21 @@ public class IpAddress implements Comparable<IpAddress> {
         this.maskEnd = maskEnd;
     }
 
-    public IpAddress getNext(){
+    public IpAddress getNext() {
         int end = maskEnd;
         int middle = maskMiddle;
         int init = maskInit;
-        if(end == 255){
+        if (end == 255) {
             end = 0;
-            if(middle == 255){
+            if (middle == 255) {
                 middle = 0;
-                if(maskSecond == 255){
+                if (maskSecond == 255) {
                     maskSecond = 0;
-                    if(init == 255){
-                    return null;
-                } else {
-                    init++;
-                }
+                    if (init == 255) {
+                        return null;
+                    } else {
+                        init++;
+                    }
                 } else {
                     maskSecond++;
                 }
@@ -95,21 +95,21 @@ public class IpAddress implements Comparable<IpAddress> {
 
     @Override
     public int compareTo(IpAddress o) {
-        if(maskInit > o.maskInit){
+        if (maskInit > o.maskInit) {
             return 1;
-        } else if(maskInit < o.maskInit){
+        } else if (maskInit < o.maskInit) {
             return -1;
-        } else{
-            if(maskSecond > o.maskSecond){
+        } else {
+            if (maskSecond > o.maskSecond) {
                 return 1;
-            } else if(maskSecond < o.maskSecond){
+            } else if (maskSecond < o.maskSecond) {
                 return -1;
-            } else{
-                if(maskMiddle > o.maskMiddle){
+            } else {
+                if (maskMiddle > o.maskMiddle) {
                     return 1;
-                } else if(maskMiddle < o.maskMiddle){
+                } else if (maskMiddle < o.maskMiddle) {
                     return -1;
-                } else{
+                } else {
                     return Integer.compare(maskEnd, o.maskEnd);
                 }
             }
