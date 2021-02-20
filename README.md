@@ -1,7 +1,7 @@
 # Chat Multicast Java
 
 ## AUTOR
-*Matheus Felipe Ferreira Martins
+* Matheus Felipe Ferreira Martins
 
 ## Comandos
 
@@ -28,7 +28,7 @@
 
 Única interação com o usuário é exibir a mensagem de servidor iniciado.
 
-##Execução - Cliente
+## Execução - Cliente
 
 - java network.Client
 
